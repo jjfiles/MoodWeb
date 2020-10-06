@@ -4,6 +4,8 @@
 ML/datasets/fer2013
 ML/datasets/test
 ML/datasets/train
+.vscode
+vscode
 
 ### Flask ###
 instance/*
