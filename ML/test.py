@@ -7,17 +7,19 @@ import pandas as pd
 import tensorflow as tf
 from keras.models import load_model
 
-IMAGESIZE = 80
-DATADIR = './datasets/test'
+IMAGESIZE = 48
+DATADIR = './datasets/test/test.csv'
 MODELDIR = './models'
 
 CATEGORIES = [
     'Angery', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'
 ]
 
+#NO MODEL TO TEST WITH
+
 #Command line arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("d", "--data", help="path to testing dataset", action="store", default=DATADIR)
+parser.add_argument("-d", "--data", help="path to testing dataset", action="store", default=DATADIR)
 parser.add_argument("-m", "--model", help="path to model directory", action="store", default=MODELDIR)
 parser.add_argument("-s", "--size", help="specify training image size", type=int, default=IMAGESIZE)
 parser.add_argument("-p", "--prediction", help="output predictions", action="store_true")

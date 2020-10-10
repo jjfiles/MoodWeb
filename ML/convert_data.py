@@ -5,7 +5,7 @@ import argparse
 import csv
 import numpy as np
 
-IMAGESIZE = 80
+IMAGESIZE = 48
 IMAGEDIR = './data/train'
 OUTDIR = './datasets/train'
 CANNYMIN = 100

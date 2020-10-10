@@ -11,8 +11,8 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
 from tensorflow.keras.callbacks import TensorBoard
 
-IMAGESIZE = 80
-DATADIR = './datasets/train'
+IMAGESIZE = 48
+DATADIR = './datasets/train/train.csv'
 LOGDIR = './logs'
 MODELDIR = './models'
 EPOCH = 10
@@ -20,6 +20,8 @@ EPOCH = 10
 CATEGORIES = [
     'Angery', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'
 ]
+
+#xTrain is wrong size
 
 # Command line arguments
 parser = argparse.ArgumentParser()
@@ -60,7 +62,7 @@ def get_train(tDir):
     
     return xTrain, yTrain
 
-if not os.path.isdir(args.logs):
+if not os.path.isdir(args.log):
     os.makedirs(args.log)
 if not os.path.isdir(args.model):
     os.makedirs(args.model)

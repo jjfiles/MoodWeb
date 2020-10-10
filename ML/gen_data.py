@@ -6,18 +6,20 @@ import argparse
 import numpy as np
 import matplotlib as plt
 
+#NOT SAVING IMAGES
+
 np.set_printoptions(threshold=sys.maxsize)
 
 SPEED = 10
-IMAGESIZE = 80
-OUTDIR = "./data/train"
+IMAGESIZE = 48
+OUTDIR = ".\\data\\train/"
 CANNYMIN = 100
 CANNYMAX = 200
 
 CATEGORIES = [
     'Angery', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'
 ]
-
+#test
 parser = argparse.ArgumentParser()
 parser.add_argument("-s", "--size", help="specify final image size", type=int, default=IMAGESIZE)
 parser.add_argument("-o", "--output", help="path to save csv to", action="store", default=OUTDIR)
@@ -43,11 +45,11 @@ def draw_rect(frame):
     
     rect_x = np.array(
         [6 * rows / 20, 6 * rows / 20, 6 * rows / 20, 9 * rows / 20, 9 * rows / 20, 9 * rows / 20, 12 * rows / 20,
-         12 * rows / 20, 12 * rows / 20],dtype=np.uint32
+         12 * rows / 20, 12 * rows / 20], dtype=np.uint32
     )
     rect_y = np.array(
         [9 * cols / 20, 10 * cols / 20, 11 * cols / 20, 9 * cols / 20, 10 * cols / 20, 11 * cols / 20, 9 * cols / 20,
-         10 * cols / 20, 11 * cols / 20],dtype=np.uint32
+         10 * cols / 20, 11 * cols / 20], dtype=np.uint32
     )
     rectangles = list(zip(rect_x, rect_y))
     for rect in rectangles:
@@ -65,8 +67,8 @@ def face_histogram(frame):
     for i, rect in enumerate(rectangles):
         roi[i * rect_offset: i * rect_offset + rect_offset, 0: rect_offset] = hsv_frame[rect[0]:rect[0] + rect_offset, rect[1]:rect[1] + rect_offset]
 
-    hand_hist = cv2.calcHist([roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
-    return cv2.normalize(hand_hist, hand_hist, 0, 255, cv2.NORM_MINMAX)
+    face_hist = cv2.calcHist([roi], [0, 1], None, [180, 256], [0, 180, 0, 256])
+    return cv2.normalize(face_hist, face_hist, 0, 255, cv2.NORM_MINMAX)
 
 def hist_masking(frame, hist):
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
@@ -91,7 +93,7 @@ def adjust_gamma(image, gamma=1.0):
     # apply gamma correction using the lookup table
     return cv2.LUT(image, table)
 
-def edge_masking(grame, hist):
+def edge_masking(frame, hist):
     if (not args.nohist):
         # converting BGR to HSV 
         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV) 
@@ -136,7 +138,8 @@ while cap.isOpened():
             path = os.path.join(args.output, selected, str(time.time()) + ".png")
             print(f"{selected}: Saving image to {path}{args.size}")
             img = cv2.resize(edges, (args.size, args.size))
-            cv2.imwrite(path, img)
+            if not cv2.imwrite(path, img):
+                raise Exception("Could not write image")
             
     #Controls
     if pressed_key == ord('+'):
@@ -168,4 +171,3 @@ while cap.isOpened():
     
 cap.release()
 cv2.destroyAllWindows()
-        
