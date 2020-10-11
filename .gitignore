@@ -6,6 +6,7 @@ ML/datasets/test
 ML/datasets/train
 .vscode
 vscode
+ML/data/train
 
 ### Flask ###
 instance/*
@@ -214,7 +215,6 @@ dmypy.json
 
 ### react ###
 .DS_*
-logs
 **/*.backup.*
 **/*.back.*
 
