@@ -6,7 +6,7 @@ import csv
 import numpy as np
 
 IMAGESIZE = 48
-IMAGEDIR = './data/train'
+IMAGEDIR = './data/'
 OUTDIR = './datasets/train'
 CANNYMIN = 100
 CANNYMAX = 200
@@ -23,6 +23,18 @@ parser.add_argument("--min", help="specify canny min value", type=int, default=C
 parser.add_argument("--max", help="specify canny max value", type=int, default=CANNYMAX)
 args = parser.parse_args()
 
+#NOT PULLING IMAGES?
+
+if not os.path.isdir(args.output):
+    os.makedirs(args.output)
+    print("Specified directory for ouput not found!")
+    print(f"Creating {args.output}...")
+if not os.path.isdir(args.data):
+    os.makedirs(args.data)
+    print("Specified directory for image data not found!")
+    print(f"Creating {args.data}...")
+    
+
 print("Generating csv from images...")
 with open(f"{args.output}/er_data_{time.time()}_{args.size}px.csv", "w", newline="") as file:
     writer = csv.writer(file)
@@ -30,16 +42,17 @@ with open(f"{args.output}/er_data_{time.time()}_{args.size}px.csv", "w", newline
     directories = sorted(os.listdir(args.data))
     for directory in directories:
         path = os.path.join(args.data, directory)
-        if not os.path.isdir(path):
+        if not os.path.isdir(path):  
             continue
-            images = sorted(os.listdir(path))
-            for img in images:
-                percent = int((images.index(img) + 1) / len(images) * 20)
-                print(f"{directory}:\t{directories.index(directory)+1}/{len(directories)}\t[{('#' * percent) + (' ' * (20-percent))}] {percent * 5}%\r", end='')
-                img_path = os.path.join(path, img)
-                img_array = cv2.resize(img_array, (args.size, args.size))
-                img_array = np.array(img_array).reshape(-1) / 255.0
-                img_array = np.insert(img_array, 0, CATEGORIES.index(directory))
-                writer.writerow(img_array)
-            print('')
-        print(f"Created dataset: {file.name}")
+        images = sorted(os.listdir(path))
+        for img in images:
+            percent = int((images.index(img) + 1) / len(images) * 20)
+            print(f"{directory}:\t{directories.index(directory)+1}/{len(directories)}\t[{('#' * percent) + (' ' * (20-percent))}] {percent * 5}%\r", end='')
+            img_path = os.path.join(path, img)
+            img_array = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
+            img_array = cv2.resize(img_array, (args.size, args.size))
+            img_array = np.array(img_array).reshape(-1) / 255.0
+            img_array = np.insert(img_array, 0, CATEGORIES.index(directory))
+            writer.writerow(img_array)
+        print('')
+    print(f"Created dataset: {file.name}")

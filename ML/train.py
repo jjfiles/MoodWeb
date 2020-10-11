@@ -12,7 +12,7 @@ from tensorflow.keras.layers import Dense, Dropout, Activation, Flatten, Conv2D,
 from tensorflow.keras.callbacks import TensorBoard
 
 IMAGESIZE = 48
-DATADIR = './datasets/train/train.csv'
+DATADIR = './datasets/train/'
 LOGDIR = './logs'
 MODELDIR = './models'
 EPOCH = 10
@@ -21,7 +21,6 @@ CATEGORIES = [
     'Angery', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral'
 ]
 
-#xTrain is wrong size
 
 # Command line arguments
 parser = argparse.ArgumentParser()
@@ -64,8 +63,12 @@ def get_train(tDir):
 
 if not os.path.isdir(args.log):
     os.makedirs(args.log)
+    print("Specified directory for logs not found!")
+    print(f"Creating {args.log}...")
 if not os.path.isdir(args.model):
     os.makedirs(args.model)
+    print("Specified directory for model not found!")
+    print(f"Creating {args.model}...")
     
 NAME = f"er-cnn-64x2-{time.time()}_{args.size}px"
 tb = TensorBoard(log_dir=f"{os.path.join(args.log, NAME)}")
@@ -97,7 +100,7 @@ model.add(Activation("relu"))
 model.add(Dense(29))
 model.add(Activation("softmax"))
 
-model.complie(
+model.compile(
     loss='sparse_categorical_crossentropy',
     optimizer='adam',
     metrics=['accuracy']

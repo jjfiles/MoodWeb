@@ -6,13 +6,11 @@ import argparse
 import numpy as np
 import matplotlib as plt
 
-#NOT SAVING IMAGES
-
 np.set_printoptions(threshold=sys.maxsize)
 
 SPEED = 10
 IMAGESIZE = 48
-OUTDIR = ".\\data\\train/"
+OUTDIR = "./data/"
 CANNYMIN = 100
 CANNYMAX = 200
 
@@ -113,6 +111,19 @@ def edge_masking(frame, hist):
     # marks them in the output map edges 
     return cv2.Canny(frame,args.min,args.max) 
 
+
+# Create any missing directories 
+if not os.path.isdir(args.output):
+    os.makedirs(args.output)
+    print("Specified directory for image ouput not found!")
+    print(f"Creating {args.output}...")
+for each in CATEGORIES:
+    if not os.path.isdir(args.output + each):
+        print(f"Subdirectory for category {each} not found!")
+        print(f"Creating {args.output + each}")
+        os.makedirs(args.output + each)
+        
+
 while cap.isOpened():
     # Capture frame-by-frame
     pressed_key = cv2.waitKey(1)
@@ -136,7 +147,7 @@ while cap.isOpened():
         counter = counter % args.speed
         if counter == 0 and selected:
             path = os.path.join(args.output, selected, str(time.time()) + ".png")
-            print(f"{selected}: Saving image to {path}{args.size}")
+            print(f"{selected}: Saving image to {path} {args.size}")
             img = cv2.resize(edges, (args.size, args.size))
             if not cv2.imwrite(path, img):
                 raise Exception("Could not write image")
@@ -163,7 +174,7 @@ while cap.isOpened():
         elif pressed_key == ord('4'):
             selected = 'Sad'
         elif pressed_key == ord('5'):
-            selected = 'Suprise'
+            selected = 'Surprise'
         elif pressed_key == ord('6'):
             selected = 'Neutral'
     
